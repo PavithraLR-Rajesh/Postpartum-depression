@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Audio Analysis</title>
+    <style>
+        /* Smooth Gradient Background */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Container Box */
+        #container {
+            width: 90%;
+            max-width: 500px;
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        /* Heading */
+        h2 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        p {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        /* Button Styles */
+        button {
+            padding: 12px 18px;
+            margin: 8px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* Updated Start Recording Button (Soft Pink) */
+        .start-btn {
+            background-color: #ff758c;
+            color: white;
+        }
+        .start-btn:hover {
+            background-color: #e84d6b;
+        }
+
+        .stop-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        .stop-btn:hover {
+            background-color: #b52b3b;
+        }
+
+        .submit-btn {
+            background-color: #007bff;
+            color: white;
+            display: none;
+        }
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Disabled Button */
+        .disabled-btn {
+            background-color: #6c757d !important;
+            color: white;
+            cursor: not-allowed;
+        }
+
+        /* Processing Button */
+        .processing-btn {
+            background-color: #007bff;
+            color: white;
+            cursor: not-allowed;
+            display: none;
+        }
+
+        /* Audio Player */
+        audio {
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        /* Result Styling */
+        #result {
+            margin-top: 15px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            #container {
+                width: 95%;
+                padding: 20px;
+            }
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h2>Audio Analysis</h2>
+        <p>Record your audio for analysis.</p>
+
+        <div id="audio-recorder">
+            <button id="startRecording" class="start-btn">Start Recording</button>
+            <button id="stopRecording" class="stop-btn disabled-btn" disabled>Stop Recording</button>
+            <button id="submitAudio" class="submit-btn" disabled>Submit</button>
+            <button id="processingAudio" class="processing-btn" disabled>Processing Audio...</button>
+            <audio id="audioPlayback" controls style="display: none;"></audio>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        let audioBlob;
+
+        document.getElementById("startRecording").addEventListener("click", async function() {
+            try {
+                let stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.start();
+
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+                    let audioURL = URL.createObjectURL(audioBlob);
+                    document.getElementById("audioPlayback").src = audioURL;
+                    document.getElementById("audioPlayback").style.display = "block";
+
+                    // Enable submit button
+                    document.getElementById("submitAudio").style.display = "inline-block";
+                    document.getElementById("submitAudio").disabled = false;
+                };
+
+                audioChunks = [];
+                document.getElementById("startRecording").disabled = true;
+                document.getElementById("startRecording").classList.add("disabled-btn"); // Gray out start button
+
+                document.getElementById("stopRecording").disabled = false;
+                document.getElementById("stopRecording").classList.remove("disabled-btn"); // Enable stop button
+                document.getElementById("stopRecording").classList.add("stop-btn");
+            } catch (error) {
+                console.error("Error accessing microphone:", error);
+                alert("Microphone access is required for recording.");
+            }
+        });
+
+        document.getElementById("stopRecording").addEventListener("click", function() {
+            mediaRecorder.stop();
+            document.getElementById("startRecording").disabled = false;
+            document.getElementById("startRecording").classList.remove("disabled-btn"); // Enable start button
+
+            document.getElementById("stopRecording").disabled = true;
+            document.getElementById("stopRecording").classList.add("disabled-btn"); // Gray out stop button
+            document.getElementById("stopRecording").classList.remove("stop-btn");
+        });
+
+        document.getElementById("submitAudio").addEventListener("click", function() {
+            let formData = new FormData();
+            formData.append("audio", audioBlob, "audio.webm");
+
+            document.getElementById("processingAudio").style.display = "inline-block"; // Show processing button
+            document.getElementById("submitAudio").disabled = true; // Disable submit button after clicking
+
+            fetch("{{ url_for('audio_analysis') }}", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("processingAudio").style.display = "none"; // Hide processing button
+
+                if (data.audio_score) {
+                    sessionStorage.setItem("audio_score", data.audio_score);
+                    setTimeout(() => {
+                        window.location.href = "{{ url_for('result') }}";  // ✅ Redirect to result page
+                    }, 1000); // Delay to show processing message
+                } else {
+                    document.getElementById("result").innerText = "Error: " + data.message;
+                }
+            })
+            .catch(error => {
+                document.getElementById("processingAudio").style.display = "none"; // Hide processing button
+                console.error("Upload error:", error);
+                document.getElementById("result").innerText = "An error occurred.";
+            });
+        });
+    </script>
+</body>
+</html>

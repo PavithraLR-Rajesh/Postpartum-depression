@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Postpartum Depression Detection</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f9f9f9; text-align: center; margin: 0; padding: 20px;">
+
+    <div style="max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <h2 style="color: #333;">Postpartum Depression Detection</h2>
+        <p style="text-align: justify; padding: 10px;">
+            Postpartum depression is a serious mental health condition that affects new mothers. It can cause severe mood swings, exhaustion, and feelings of anxiety or sadness. 
+            Early detection and support are crucial for managing symptoms effectively. This tool helps assess potential depression risk through a questionnaire and voice analysis.
+        </p>
+
+        <button onclick="showQuiz()" style="background: #007bff; color: white; padding: 10px 20px; font-size: 16px; border: none; border-radius: 5px; cursor: pointer;">📝 Take Quiz</button>
+        
+        <div id="quiz-section" style="display: none; margin-top: 20px;">
+            <h3 style="color: #333;">🧠 Questionnaire</h3>
+            <form id="questionnaire">
+                <div style="text-align: left;">
+                    <label>Feeling sad?</label><br>
+                    <input type="radio" name="q1" value="1"> Yes
+                    <input type="radio" name="q1" value="0"> No
+                    <br><br>
+
+                    <label>Irritable towards baby & partner?</label><br>
+                    <input type="radio" name="q2" value="1"> Yes
+                    <input type="radio" name="q2" value="0"> No
+                    <br><br>
+
+                    <label>Trouble sleeping?</label><br>
+                    <input type="radio" name="q3" value="1"> Yes
+                    <input type="radio" name="q3" value="0"> No
+                    <br><br>
+
+                    <label>Problems concentrating?</label><br>
+                    <input type="radio" name="q4" value="1"> Yes
+                    <input type="radio" name="q4" value="0"> No
+                    <br><br>
+
+                    <label>Overeating or loss of appetite?</label><br>
+                    <input type="radio" name="q5" value="1"> Yes
+                    <input type="radio" name="q5" value="0"> No
+                    <br><br>
+
+                    <label>Feeling anxious?</label><br>
+                    <input type="radio" name="q6" value="1"> Yes
+                    <input type="radio" name="q6" value="0"> No
+                    <br><br>
+
+                    <label>Feeling of guilt?</label><br>
+                    <input type="radio" name="q7" value="1"> Yes
+                    <input type="radio" name="q7" value="0"> No
+                    <br><br>
+
+                    <label>Problems bonding?</label><br>
+                    <input type="radio" name="q8" value="1"> Yes
+                    <input type="radio" name="q8" value="0"> No
+                    <br><br>
+
+                    <label>Suicidal thoughts?</label><br>
+                    <input type="radio" name="q9" value="1"> Yes
+                    <input type="radio" name="q9" value="0"> No
+                    <br><br>
+
+                    <label>Age:</label>
+                    <input type="number" id="age" min="18" max="50" style="width: 100px;">
+                    <br><br>
+                </div>
+            </form>
+        </div>
+
+        <div id="audio-section" style="display: none; margin-top: 30px;">
+            <h3 style="color: #333;">🎙️ Say About Your Situation</h3>
+            <button onclick="startRecording()" id="startBtn" style="background: blue; color: white; padding: 10px 15px; border: none; cursor: pointer; border-radius: 5px;">🎤 Start Recording</button>
+            <button onclick="stopRecording()" id="stopBtn" disabled style="background: red; color: white; padding: 10px 15px; border: none; cursor: pointer; border-radius: 5px;">⏹ Stop Recording</button>
+            <p id="recordStatus" style="color: red;"></p>
+        </div>
+
+        <div id="predict-section" style="display: none; margin-top: 20px;">
+            <button onclick="submitData()" style="background: green; color: white; padding: 10px 20px; font-size: 16px; border: none; border-radius: 5px;">🔍 Predict</button>
+        </div>
+
+        <p id="result" style="font-weight: bold; color: #ff0000; margin-top: 20px;"></p>
+    </div>
+
+    <script>
+        function showQuiz() {
+            document.getElementById("quiz-section").style.display = "block";
+            document.getElementById("audio-section").style.display = "block";
+            document.getElementById("predict-section").style.display = "block";
+        }
+
+        let mediaRecorder;
+        let audioChunks = [];
+
+        function startRecording() {
+            audioChunks = []; 
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.start();
+                    document.getElementById("recordStatus").innerText = "🎙️ Recording... Speak now!";
+
+                    mediaRecorder.ondataavailable = event => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        sendAudio(audioBlob);
+                    };
+
+                    document.getElementById("startBtn").disabled = true;
+                    document.getElementById("stopBtn").disabled = false;
+                })
+                .catch(error => {
+                    document.getElementById("recordStatus").innerText = "❌ Microphone access denied!";
+                });
+        }
+
+        function stopRecording() {
+            if (!mediaRecorder) return; 
+            mediaRecorder.stop();
+            document.getElementById("recordStatus").innerText = "🔄 Processing audio...";
+            document.getElementById("startBtn").disabled = false;
+            document.getElementById("stopBtn").disabled = true;
+        }
+
+        function sendAudio(audioBlob) {
+            const formData = new FormData();
+            formData.append("file", audioBlob, "recorded_audio.wav");
+
+            fetch("/upload_audio", { method: "POST", body: formData })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("recordStatus").innerText = "✅ Audio uploaded successfully!";
+                })
+                .catch(() => {
+                    document.getElementById("recordStatus").innerText = "❌ Upload failed!";
+                });
+        }
+
+        function submitData() {
+            let formData = new FormData(document.getElementById("questionnaire"));
+            let data = { "Age": document.getElementById("age").value };
+
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+
+            document.getElementById("result").innerText = "🔍 Analyzing...";
+            
+            fetch("/predict", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("result").innerText = "Prediction: " + data.prediction;
+                });
+        }
+    </script>
+
+</body>
+</html>

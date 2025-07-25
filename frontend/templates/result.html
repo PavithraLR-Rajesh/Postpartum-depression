@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Depression Analysis Result</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #container {
+            width: 90%;
+            max-width: 650px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 30px;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        .section {
+            margin: 20px 0;
+            background: #fcefee;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        h3 {
+            color: #444;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #444;
+            margin: 5px 0;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .depressed {
+            color: #d32f2f;
+        }
+
+        .not-depressed {
+            color: #388e3c;
+        }
+
+        h2 {
+            font-size: 26px;
+            color: #e84d6b;
+            margin-top: 30px;
+        }
+
+        .final {
+            font-size: 22px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .back-home {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background: #ff758c;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .back-home:hover {
+            background: #e84d6b;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Depression Analysis Result</h1>
+
+        <div class="section">
+            <h3>MCQ Analysis</h3>
+            <p><strong>Interpretation:</strong>
+                <span class="status {{ 'depressed' if mcq_result == 'Depressed' else 'not-depressed' }}">
+                    {{ mcq_result }}
+                </span>
+            </p>
+        </div>
+
+        <div class="section">
+            <h3>Audio Analysis</h3>
+            <p><strong>Interpretation:</strong>
+                <span class="status {{ 'depressed' if audio_result == 'Depressed' else 'not-depressed' }}">
+                    {{ audio_result }}
+                </span>
+            </p>
+        </div>
+
+        <div class="section">
+            <h3>Fusion Model</h3>
+        </div>
+
+        <h2>Final Diagnosis:</h2>
+        <div class="final {{ 'depressed' if final_pred == 'Depressed' else 'not-depressed' }}">
+            {{ final_pred }}
+        </div>
+
+        <a href="/" class="back-home">Go Back Home</a>
+    </div>
+</body>
+</html>

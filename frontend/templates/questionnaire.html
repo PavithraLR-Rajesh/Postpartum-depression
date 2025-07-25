@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Depression Questionnaire</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Smooth Gradient Background */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Form Container */
+        #contents {
+            width: 90%;
+            max-width: 600px;
+            padding: 25px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        /* Heading */
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        /* Form Styles */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #444;
+            text-align: left;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff5f7;
+            transition: all 0.3s ease;
+            appearance: none;
+            -moz-appearance: none;
+            -webkit-appearance: none;
+        }
+
+        /* Button Styling */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: #ff758c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #e6005c;
+        }
+
+        /* Result Styling */
+        #result {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            #contents {
+                width: 95%;
+                padding: 20px;
+            }
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="contents">
+        <h2>Postpartum Depression Questionnaire</h2>
+        <form id="questionnaireForm">
+            <label>1. Feeling sad or tearful?</label>
+            <select name="Feeling sad or Tearful">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+
+            <label>2. Irritable towards baby & partner?</label>
+            <select name="Irritable towards baby & partner">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+
+            <label>3. Trouble sleeping at night?</label>
+            <select name="Trouble sleeping at night">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+
+            <label>4. Problems concentrating or making decisions?</label>
+            <select name="Problems concentrating or making decision">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+
+            <label>5. Overeating or loss of appetite?</label>
+            <select name="Overeating or loss of appetite">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+
+            <label>6. Feeling anxious?</label>
+            <select name="Feeling anxious">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+
+            <label>7. Feeling of guilt?</label>
+            <select name="Feeling of guilt">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+
+            <label>8. Problems bonding with the baby?</label>
+            <select name="Problems of bonding with baby">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+
+            <label>9. Suicidal thoughts or attempts?</label>
+            <select name="Suicide attempt">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+
+            <label>10. Age:</label>
+            <input type="number" name="Age" min="18" max="50" required>
+
+        </form>
+
+        <div id="result"></div>
+
+        <div class="button-group">
+            <button type="button" onclick="predictMCQ()">Submit</button>
+        </div>
+    </div>
+
+    <script>
+        function predictMCQ() {
+            const form = document.getElementById('questionnaireForm');
+            const formData = new FormData(form);
+            let urlParams = new URLSearchParams();
+
+            formData.forEach((value, key) => {
+                urlParams.append(key, value);
+            });
+
+            fetch("{{ url_for('questionnaire') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: urlParams.toString()
+            })
+            .then(response => response.text()) // ✅ Expecting HTML redirect response
+            .then(() => {
+                window.location.href = "{{ url_for('result') }}"; // ✅ Redirecting to results page
+            })
+            .catch(error => {
+                console.error("Fetch error:", error);
+                alert("An error occurred: " + error.message);
+            });
+        }
+    </script>
+</body>
+</html>

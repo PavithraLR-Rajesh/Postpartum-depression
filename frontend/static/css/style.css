@@ -1,0 +1,205 @@
+/* Website template customized for Postpartum Depression Detection */
+@font-face {
+    font-family: 'Oswald';
+    src: url('../fonts/Oswald.eot');
+    src: local('☺'), url('../fonts/Oswald.woff') format('woff'), url('../fonts/Oswald.ttf') format('truetype'), url('../fonts/Oswald.svg') format('svg');
+}
+
+@font-face {
+    font-family: 'QuattrocentoSans-Regular';
+    src: url('../fonts/QuattrocentoSans-Regular.eot');
+    src: local('☺'), url('../fonts/QuattrocentoSans-Regular.woff') format('woff'),
+         url('../fonts/QuattrocentoSans-Regular.ttf') format('truetype'), url('../fonts/QuattrocentoSans-Regular.svg') format('svg');
+}
+
+body {
+    background: #f5f5f5;
+    font-family: "QuattrocentoSans-Regular";
+    margin: 0;
+    padding: 0;
+}
+
+/* General Styling */
+img {
+    border: 0;
+    max-width: 100%;
+}
+
+h1, h2, h3 {
+    font-family: "Oswald";
+    color: #333;
+    text-align: center;
+}
+
+p {
+    color: #444;
+    font-size: 14px;
+    line-height: 22px;
+    text-align: justify;
+}
+
+/* ---------------- Header ---------------- */
+#header {
+    background-color: #241b18;
+    height: 80px;
+    border-bottom: 2px solid #ffc947;
+}
+
+#header > div {
+    width: 960px;
+    margin: 0 auto;
+    padding: 0 10px;
+    text-align: right;
+}
+
+#logo {
+    float: left;
+}
+
+#navigation {
+    display: inline-block;
+    line-height: 80px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#navigation li {
+    float: left;
+    margin: 0 15px;
+}
+
+#navigation li a {
+    color: #fff;
+    font-family: "Oswald";
+    font-size: 14px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+#navigation li a:hover, #navigation li.selected a {
+    color: #ffc947;
+}
+
+/* ---------------- Home Page ---------------- */
+#contents {
+    width: 960px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#adbox {
+    position: relative;
+    text-align: center;
+    padding: 20px;
+}
+
+#adbox h1 {
+    font-size: 28px;
+    color: #241b18;
+}
+
+#adbox p {
+    font-size: 16px;
+    color: #666;
+    text-align: center;
+}
+
+#adbox .btn1 {
+    display: inline-block;
+    background-color: #ffc947;
+    color: #fff;
+    font-size: 14px;
+    padding: 12px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#adbox .btn1:hover {
+    background-color: #ffb400;
+}
+
+/* ---------------- Features Section ---------------- */
+#featured {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+#featured li {
+    list-style: none;
+    background-color: #4b3a33;
+    padding: 20px;
+    border-radius: 10px;
+    width: 45%;
+}
+
+#featured li img {
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+#featured li h4 {
+    color: #ffc947;
+    font-size: 18px;
+}
+
+#featured li p {
+    color: #fff;
+    font-size: 14px;
+}
+
+#featured li .btn2 {
+    display: inline-block;
+    background-color: #fff;
+    color: #4b3a33;
+    font-size: 14px;
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#featured li .btn2:hover {
+    background-color: #ffc947;
+    color: #fff;
+}
+
+/* ---------------- Footer ---------------- */
+#footer {
+    background-color: #e2b241;
+    border-top: 1px solid #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+#footer p {
+    color: #4b3a33;
+    font-size: 12px;
+}
+
+#footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#footer ul li {
+    display: inline;
+    margin: 0 10px;
+}
+
+#footer ul li a {
+    color: #ab7d0f;
+    font: 11px "Oswald";
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+#footer ul li a:hover {
+    color: #241b18;
+}

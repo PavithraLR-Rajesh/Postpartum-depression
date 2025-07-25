@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postpartum Depression Detection</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 50%;
+            margin: 7% auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #333;
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 18px;
+            color: #555;
+            line-height: 1.5;
+            margin: 10px 0;
+        }
+        .start-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 18px;
+            color: white;
+            background: #ff5f6d;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-decoration: none;
+        }
+        .start-button:hover {
+            background: #ff3b4a;
+        }
+        .image-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .image-container img {
+            width: 80%;
+            max-width: 400px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='images/mother_baby.jpg') }}" alt="Mother and Baby">
+        </div>
+        <h1>Welcome to Postpartum Depression Detection</h1>
+        <p>Postpartum depression is a serious condition affecting many new mothers.  
+           Our AI-powered system analyzes your responses and voice recordings  
+           to help identify signs of postpartum depression.</p>
+        <p>Simply  answer a few questions and  record your voice  to receive a personalized assessment.  
+           Early detection can lead to better support and care.</p>
+        <a href="/questionnaire" class="start-button">Start Detection</a>
+    </div>
+</body>
+</html>
