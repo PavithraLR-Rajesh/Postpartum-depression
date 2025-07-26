@@ -1,10 +1,4 @@
-Absolutely! Here's your **full, updated `README.md`** — combining everything: features, how to run, tools used, and a clear note about test/unused code.
 
----
-
-### ✅ Full `README.md` Content
-
-````markdown
 # 🧠 Postpartum Depression Detection App
 
 This Flask-based web application helps detect **postpartum depression** using both **MCQ questionnaire responses** and **audio analysis**. It uses pre-trained deep learning models to make predictions based on user input.
