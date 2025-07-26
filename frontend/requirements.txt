@@ -1,0 +1,9 @@
+Flask==2.3.3
+numpy==1.26.4
+pandas==2.2.2
+tensorflow==2.13.0
+scikit-learn==1.4.2
+librosa==0.10.1
+soundfile==0.12.1
+matplotlib==3.8.4  # Required by librosa sometimes
+ffmpeg-python==0.2.0  # Optional if using subprocess is complex
